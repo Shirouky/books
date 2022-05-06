@@ -34,8 +34,13 @@
 export default {
   name: "UserView",
   mounted() {
-    // Сразу после загрузки страницы подгружаем список книг и отображаем его
     this.loadBookList();
+    // this.$store.dispatch("LOAD_BOOKS");
+  },
+  computed: {
+    // books() {
+    //   return this.$store.state.books;
+    // }
   },
   methods: {
     loadBookList() {
@@ -43,36 +48,10 @@ export default {
         this.books = response.data;
       });
     },
-    addBook() {
-      axios
-        .post("http://127.0.0.1:8000/api/book/add", {
-          title: this.title,
-          author: this.author,
-        })
-        .then((response) => {
-          this.books = response.data;
-        });
-    },
-    deleteBook(id) {
-      axios
-        .get("http://127.0.0.1:8000/api/book/delete/" + String(id))
-        .then((response) => {
-          this.books = response.data;
-        });
-    },
-    changeBookAvailability(id) {
-      axios
-        .get("http://127.0.0.1:8000/api/book/change_availability/" + String(id))
-        .then((response) => {
-          this.books = response.data;
-        });
-    },
   },
   data() {
     return {
       books: [],
-      title: "",
-      author: "",
     };
   },
 };

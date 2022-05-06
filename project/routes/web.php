@@ -18,5 +18,9 @@ Route::get('/', function () {
 });
 
 Route::get('/admin', function () {
-    return view('spa');
+    return view('home');
+});
+
+Route::get('/login', function () {
+    return view('home');
 });

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use App\Http\Controllers\BookController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 /*
 |--------------------------------------------------------------------------
@@ -15,20 +16,40 @@ use App\Models\User;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 Route::post('/book/add', [BookController::class, 'add']);
 
 Route::get('/book/all', [BookController::class, 'all']);
 
-Route::get('/book/delete/{id}', [BookController::class, 'delete']);
+Route::delete('/book/delete/{id}', [BookController::class, 'delete']);
 
-Route::get('/book/change_availability/{id}', [BookController::class, 'change_availability']);
+Route::patch('/book/change_availability/{id}', [BookController::class, 'change_availability']);
 
 Route::post('/token', function (Request $request) {
     $user = User::where('email', $request->email)->first();
-    return $user->createToken($request->device_name)->plainTextToken;
+
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return response([
+            'message' => ['These credentials do not match our records.']
+        ], 404);
+    }
+
+    $admin = $user->name == "Admin";
+    $token = $user->createToken($request->device_name)->plainTextToken;
+
+    $response = [
+        'user' => $user,
+        'token' => $token,
+        'is_admin' => $admin,
+    ];
+
+    // return response($response, 201);
+    // if ($user) {
+    //     // if ($user->password == Hash::make($request->password)) 
+    //     if ($user->name == "Admin") $abilities = ["server:all"];
+    //     else $abilities = ["server:view"];
+    //     return $user->createToken($request->device_name, $abilities)->plainTextToken;
+    // }
+    return $response;
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

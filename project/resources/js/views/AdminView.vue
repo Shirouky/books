@@ -65,8 +65,8 @@
 export default {
   name: "AdminView",
   mounted() {
-    // Сразу после загрузки страницы подгружаем список книг и отображаем его
     this.loadBookList();
+    // this.$store.dispatch("LOAD_BOOKS");
   },
   methods: {
     loadBookList() {
@@ -75,25 +75,32 @@ export default {
       });
     },
     addBook() {
+      const data = {
+        title: this.title,
+        author: this.author,
+      };
+
+      // this.$store.dispatch("ADD_BOOK", data);
       axios
-        .post("http://127.0.0.1:8000/api/book/add", {
-          title: this.title,
-          author: this.author,
-        })
+        .post("http://127.0.0.1:8000/api/book/add", data)
         .then((response) => {
           this.books = response.data;
         });
     },
     deleteBook(id) {
+      // this.$store.dispatch("DELETE_BOOK", id);
       axios
-        .get("http://127.0.0.1:8000/api/book/delete/" + String(id))
+        .delete("http://127.0.0.1:8000/api/book/delete/" + String(id))
         .then((response) => {
           this.books = response.data;
         });
     },
     changeBookAvailability(id) {
+      // this.$store.dispatch("CHANGE_BOOK", id);
       axios
-        .get("http://127.0.0.1:8000/api/book/change_availability/" + String(id))
+        .patch(
+          "http://127.0.0.1:8000/api/book/change_availability/" + String(id)
+        )
         .then((response) => {
           this.books = response.data;
         });
