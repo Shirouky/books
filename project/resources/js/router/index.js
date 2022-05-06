@@ -3,34 +3,10 @@ import VueRouter from 'vue-router'
 import UserView from '../views/UserView.vue'
 import AdminView from '../views/AdminView.vue'
 import LoginView from '../views/LoginView.vue'
-// import store from "../store"
-
-// const ifNotAuthenticated = (to, from, next) => {
-//   if (!store.getters.isAuthenticated) {
-//     next()
-//     return
-//   }
-//   next('/')
-// }
-
-// const ifAuthenticated = (to, from, next) => {
-//   if (store.getters.isAuthenticated) {
-//     next()
-//     return
-//   }
-//   next('/login')
-// }
-
-// const ifAdmin = (to, from, next) => {
-//   if (store.getters.isAdmin) {
-//     next()
-//     return
-//   }
-//   next('/admin')
-// }
+import { store } from "../store"
 
 const ifNotAuthenticated = (to, from, next) => {
-  if (!localStorage.getItem('token')) {
+  if (!store.state.token) {
     next()
     return
   }
@@ -38,7 +14,7 @@ const ifNotAuthenticated = (to, from, next) => {
 }
 
 const ifAuthenticated = (to, from, next) => {
-  if (localStorage.getItem('token')) {
+  if (store.state.token) {
     next()
     return
   }
@@ -46,11 +22,11 @@ const ifAuthenticated = (to, from, next) => {
 }
 
 const ifAdmin = (to, from, next) => {
-  if (localStorage.getItem('is_admin') == "true") {
+  if (store.state.is_admin) {
     next()
     return
   }
-  next('/login')
+  next('/admin')
 }
 
 Vue.use(VueRouter)

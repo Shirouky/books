@@ -10,6 +10,7 @@ export const store = new Vuex.Store({
         api: "http://127.0.0.1:8000/api",
         user: {},
         is_admin: false,
+        books: [],
     },
     getters: {
         isLogged: state => !!state.user
@@ -27,6 +28,9 @@ export const store = new Vuex.Store({
             state.is_admin = false;
             Axios.defaults.headers.common['Authorization'] = "";
         },
+        SET_BOOKS: (state, payload) => {
+            state.books = payload;
+        },
     },
     actions: {
         async LOGIN({ commit, state }, data) {
@@ -35,7 +39,7 @@ export const store = new Vuex.Store({
                 .then(function (response) {
                     commit('SET_TOKEN', response.data);
                 }).catch(function (error) {
-                    console.log("Произошла ошибка загрузки (" + error.response.status + ")");
+                    console.log("Произошла ошибка (" + error.response.status + ")");
                 })
         },
 
@@ -49,7 +53,7 @@ export const store = new Vuex.Store({
                 .then(function (response) {
                     commit('SET_BOOKS', response.data);
                 }).catch(function (error) {
-                    console.log("Произошла ошибка загрузки (" + error.response.status + ")");
+                    console.log("Произошла ошибка (" + error.response.status + ")");
                 })
         },
 
@@ -59,7 +63,7 @@ export const store = new Vuex.Store({
                 .then(function (response) {
                     commit('SET_BOOKS', response.data);
                 }).catch(function (error) {
-                    console.log("Произошла ошибка загрузки (" + error.response.status + ")");
+                    console.log("Произошла ошибка (" + error.response.status + ")");
                 })
         },
 
@@ -69,7 +73,7 @@ export const store = new Vuex.Store({
                 .then(function (response) {
                     commit('SET_BOOKS', response.data);
                 }).catch(function (error) {
-                    console.log("Произошла ошибка загрузки (" + error.response.status + ")");
+                    console.log("Произошла ошибка (" + error.response.status + ")");
                 })
         },
 
@@ -79,7 +83,7 @@ export const store = new Vuex.Store({
                 .then(function (response) {
                     commit('SET_BOOKS', response.data);
                 }).catch(function (error) {
-                    console.log("Произошла ошибка загрузки (" + error.response.status + ")");
+                    console.log("Произошла ошибка (" + error.response.status + ")");
                 })
         },
     }

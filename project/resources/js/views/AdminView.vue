@@ -20,7 +20,7 @@
             <button
               type="button"
               class="btn btn-outline-primary"
-              v-on:click="changeBookAvailability(book.id)"
+              v-on:click="$store.dispatch('CHANGE_BOOK', book.id)"
             >
               {{ book.availability ? "Доступна" : "Не доступна" }}
             </button>
@@ -29,7 +29,7 @@
             <button
               type="button"
               class="btn btn-outline-danger"
-              v-on:click="deleteBook(book.id)"
+              v-on:click="$store.dispatch('DELETE_BOOK', book.id)"
             >
               Удалить
             </button>
@@ -65,50 +65,24 @@
 export default {
   name: "AdminView",
   mounted() {
-    this.loadBookList();
-    // this.$store.dispatch("LOAD_BOOKS");
+    this.$store.dispatch("LOAD_BOOKS");
+  },
+  computed: {
+    books() {
+      return this.$store.state.books;
+    },
   },
   methods: {
-    loadBookList() {
-      axios.get("http://127.0.0.1:8000/api/book/all").then((response) => {
-        this.books = response.data;
-      });
-    },
     addBook() {
       const data = {
         title: this.title,
         author: this.author,
       };
-
-      // this.$store.dispatch("ADD_BOOK", data);
-      axios
-        .post("http://127.0.0.1:8000/api/book/add", data)
-        .then((response) => {
-          this.books = response.data;
-        });
-    },
-    deleteBook(id) {
-      // this.$store.dispatch("DELETE_BOOK", id);
-      axios
-        .delete("http://127.0.0.1:8000/api/book/delete/" + String(id))
-        .then((response) => {
-          this.books = response.data;
-        });
-    },
-    changeBookAvailability(id) {
-      // this.$store.dispatch("CHANGE_BOOK", id);
-      axios
-        .patch(
-          "http://127.0.0.1:8000/api/book/change_availability/" + String(id)
-        )
-        .then((response) => {
-          this.books = response.data;
-        });
+      this.$store.dispatch("ADD_BOOK", data);
     },
   },
   data() {
     return {
-      books: [],
       title: "",
       author: "",
     };

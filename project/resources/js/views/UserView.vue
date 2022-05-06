@@ -34,25 +34,12 @@
 export default {
   name: "UserView",
   mounted() {
-    this.loadBookList();
-    // this.$store.dispatch("LOAD_BOOKS");
+    this.$store.dispatch("LOAD_BOOKS");
   },
   computed: {
-    // books() {
-    //   return this.$store.state.books;
-    // }
-  },
-  methods: {
-    loadBookList() {
-      axios.get("http://127.0.0.1:8000/api/book/all").then((response) => {
-        this.books = response.data;
-      });
-    },
-  },
-  data() {
-    return {
-      books: [],
-    };
+    books() {
+      return this.$store.state.books;
+    }
   },
 };
 </script>
