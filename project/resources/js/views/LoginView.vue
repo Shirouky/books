@@ -3,6 +3,8 @@
     <div id="app">
       <div class="container mt-5">
         <h1>Вход</h1>
+        <router-link to="/login">Вход</router-link>
+        <router-link to="/register">Регистрация</router-link>
       </div>
       <div class="container mt-5">
         <input type="text" placeholder="Email" v-model="email" />
