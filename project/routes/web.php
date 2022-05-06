@@ -24,3 +24,7 @@ Route::get('/admin', function () {
 Route::get('/login', function () {
     return view('home');
 });
+
+Route::get('/register', function () {
+    return view('home');
+});

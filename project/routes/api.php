@@ -18,13 +18,31 @@ use App\Models\User;
 
 Route::post('/book/add', [BookController::class, 'add']);
 
+Route::post('/register', function (Request $request) {
+    $data = $request->validate([
+        'name' => 'required',
+        'email' => 'required|email',
+        'password' => 'required'
+    ]);
+    $user = new User;
+    $user->name = $request->name;
+    $user->email = $request->email;
+    $user->password = Hash::make($request->password);
+    $user->save();
+});
+
 Route::get('/book/all', [BookController::class, 'all']);
 
 Route::delete('/book/delete/{id}', [BookController::class, 'delete']);
 
 Route::patch('/book/change_availability/{id}', [BookController::class, 'change_availability']);
-
+//admin@test.com
 Route::post('/token', function (Request $request) {
+    $data = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required'
+    ]);
+
     $user = User::where('email', $request->email)->first();
 
     if (!$user || !Hash::check($request->password, $user->password)) {
@@ -34,21 +52,13 @@ Route::post('/token', function (Request $request) {
     }
 
     $admin = $user->name == "Admin";
-    $token = $user->createToken($request->device_name)->plainTextToken;
+    $token = $user->createToken($request->device_name, [$admin ? 'edit' : 'view'])->plainTextToken;
 
     $response = [
         'user' => $user,
         'token' => $token,
         'is_admin' => $admin,
     ];
-
-    // return response($response, 201);
-    // if ($user) {
-    //     // if ($user->password == Hash::make($request->password)) 
-    //     if ($user->name == "Admin") $abilities = ["server:all"];
-    //     else $abilities = ["server:view"];
-    //     return $user->createToken($request->device_name, $abilities)->plainTextToken;
-    // }
     return $response;
 });
 
@@ -56,6 +66,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/login', function () {
-    return view('login');
-})->name('login');
+Route::middleware('auth:sanctum')->get('/check-user', function () {
+    return true;
+});
+
+Route::middleware(['auth:sanctum', 'ability:edit'])->get('/check-admin', function () {
+    return true;
+});

@@ -9,7 +9,6 @@ export const store = new Vuex.Store({
         token: "",
         api: "http://127.0.0.1:8000/api",
         user: {},
-        is_admin: false,
         books: [],
     },
     getters: {
@@ -18,14 +17,14 @@ export const store = new Vuex.Store({
     mutations: {
         SET_TOKEN: (state, payload) => {
             state.token = payload.token;
+            localStorage.setItem("token", state.token)
             state.user = payload.user;
-            state.is_admin = payload.is_admin;
-            Axios.defaults.headers.common['Authorization'] = state.token;
+            Axios.defaults.headers.common['Authorization'] = 'Bearer' + state.token;
         },
         RESET_TOKEN: (state) => {
             state.token = "";
+            localStorage.setItem("token", state.token)
             state.user = {};
-            state.is_admin = false;
             Axios.defaults.headers.common['Authorization'] = "";
         },
         SET_BOOKS: (state, payload) => {
@@ -43,8 +42,16 @@ export const store = new Vuex.Store({
                 })
         },
 
-        async LOGOUT({ commit, state }) {
+        async LOGOUT({ commit }) {
             commit("RESET_TOKEN")
+        },
+
+        async REGISTER({ commit, state }, data) {
+            await Axios
+                .post(`${state.api}/register`, data)
+                .catch(function (error) {
+                    console.log("Произошла ошибка (" + error.response.status + ")");
+                })
         },
 
         async LOAD_BOOKS({ commit, state }) {

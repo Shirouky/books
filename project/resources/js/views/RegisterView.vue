@@ -2,12 +2,15 @@
   <body>
     <div id="app">
       <div class="container mt-5">
-        <h1>Вход</h1>
+        <h1>Регистрация</h1>
+        <router-link to="/login">Вход</router-link>
+        <router-link to="/register">Регистрация</router-link>
       </div>
       <div class="container mt-5">
+        <input type="text" placeholder="Name" v-model="name" />
         <input type="text" placeholder="Email" v-model="email" />
         <input type="text" placeholder="Password" v-model="password" />
-        <button @click="login()">Войти</button>
+        <button @click="register()">Зарегистрироваться</button>
       </div>
     </div>
   </body>
@@ -15,16 +18,16 @@
 
 <script>
 export default {
-  name: "LoginView",
+  name: "RegisterView",
   methods: {
-    login() {
+    register() {
       const data = {
+        name: this.name,
         email: this.email,
         password: this.password,
-        device_name: navigator.userAgent,
       };
-      this.$store.dispatch("LOGIN", data).then(() => {
-        this.$router.push({ name: "home" }).catch((err) => {
+      this.$store.dispatch("REGISTER", data).then(() => {
+        this.$router.push({ name: "login" }).catch((err) => {
           console.log(err);
         });
       });
@@ -34,6 +37,7 @@ export default {
     return {
       email: "",
       password: "",
+      name: ""
     };
   },
 };

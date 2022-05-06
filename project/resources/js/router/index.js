@@ -3,30 +3,58 @@ import VueRouter from 'vue-router'
 import UserView from '../views/UserView.vue'
 import AdminView from '../views/AdminView.vue'
 import LoginView from '../views/LoginView.vue'
+import RegisterView from '../views/RegisterView.vue'
 import { store } from "../store"
 
-const ifNotAuthenticated = (to, from, next) => {
-  if (!store.state.token) {
-    next()
-    return
-  }
-  next('/')
-}
-
 const ifAuthenticated = (to, from, next) => {
-  if (store.state.token) {
-    next()
-    return
+  let token = localStorage.getItem("token") || store.state.token;
+  if (token == "") {
+    next("/login");
+  } else {
+    axios
+      .get("/api/check-user", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then(() => {
+        next();
+        return
+      })
+      .catch(() => {
+        console.log("sada")
+        next("/login");
+      });
   }
-  next('/login')
 }
 
-const ifAdmin = (to, from, next) => {
-  if (store.state.is_admin) {
-    next()
-    return
+const ifNotAuthenticated = (to, from, next) => {
+  let token = localStorage.getItem("token") || store.state.token;
+  if (token == "" || token) {
+    next("/login");
+  } else {
+    next("/")
   }
-  next('/admin')
+}
+const ifAdmin = (to, from, next) => {
+  let token = localStorage.getItem("token") || store.state.token;
+  if (token == "") {
+    next("/login");
+  } else {
+    axios
+      .get("/api/check-admin", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then(() => {
+        next();
+      })
+      .catch(() => {
+        console.log("asd")
+        next("/login");
+      });
+  }
 }
 
 Vue.use(VueRouter)
@@ -48,7 +76,10 @@ const routes = [
     path: '/login',
     name: 'login',
     component: LoginView,
-    beforeEnter: ifNotAuthenticated,
+  }, {
+    path: '/register',
+    name: 'register',
+    component: RegisterView,
   }
 ]
 
