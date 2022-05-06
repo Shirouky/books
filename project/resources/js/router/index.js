@@ -12,11 +12,7 @@ const ifAuthenticated = (to, from, next) => {
     next("/login");
   } else {
     axios
-      .get("/api/check-user", {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
+      .get("/api/check-user")
       .then(() => {
         next();
         return
@@ -42,11 +38,7 @@ const ifAdmin = (to, from, next) => {
     next("/login");
   } else {
     axios
-      .get("/api/check-admin", {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
+      .get("/api/check-admin")
       .then(() => {
         next();
       })

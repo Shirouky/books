@@ -19,7 +19,7 @@ export const store = new Vuex.Store({
             state.token = payload.token;
             localStorage.setItem("token", state.token)
             state.user = payload.user;
-            Axios.defaults.headers.common['Authorization'] = 'Bearer' + state.token;
+            Axios.defaults.headers.common['Authorization'] = 'Bearer ' + state.token;
         },
         RESET_TOKEN: (state) => {
             state.token = "";
